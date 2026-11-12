@@ -1,0 +1,43 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GRAVITY PONG (lite)</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  /* 長押しで、選択・コピーの操作(iOS Safari の青いハンドル)やコールアウトが始まると、スマッシュを溜める長押しが途切れる(B-010)。
+     touch-action: none だけでは止まらないので、選択・コールアウト・タップのハイライトを抑える(下の JS でもイベントを抑える) */
+  html,body{margin:0;touch-action:none;background:#000;height:100%;overflow:hidden;
+    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+  body{display:grid;place-items:center}
+  /* canvas の内部は 626x360 のまま。CSS で拡大し、最近傍で出す(SPEC §4.2)。大きさは下の fit() が決める */
+  canvas{display:block;touch-action:none;width:626px;height:360px;image-rendering:pixelated;background:#020502;
+    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;-webkit-user-drag:none}
+</style>
+<canvas id="game" width="626" height="360"></canvas>
+<script type="module">
+  import init from './gp_lite.js'
+  // ネイティブの present::fit と同じ規則: 窓が内部解像度以上なら整数倍、それより小さければ縦横比を保って縮める。余白は黒
+  const IW = 626, IH = 360
+  const c = document.getElementById('game')
+  // 物理画素(CSS 画素 × devicePixelRatio)で整数倍を決め、CSS の大きさへ戻す。HiDPI でもにじまない
+  function fit() {
+    const r = window.devicePixelRatio || 1
+    const w = Math.max(Math.floor(innerWidth * r), 1), h = Math.max(Math.floor(innerHeight * r), 1)
+    const s = Math.floor(Math.min(w / IW, h / IH))
+    let dw, dh
+    if (s >= 1) { dw = IW * s; dh = IH * s }
+    else if (w * IH <= h * IW) { dw = w; dh = Math.max(Math.floor(w * IH / IW), 1) }
+    else { dh = h; dw = Math.max(Math.floor(h * IW / IH), 1) }
+    c.style.width = dw / r + 'px'; c.style.height = dh / r + 'px'
+  }
+  // 選択・ドラッグ・長押しのメニューを始めさせない(CSS の指定に加えて)
+  for (const ev of ['selectstart', 'dragstart', 'contextmenu']) addEventListener(ev, (e) => e.preventDefault())
+  addEventListener('resize', fit); fit()
+  // 全画面: F キー(ブラウザの F11 でも resize で追従する)
+  addEventListener('keydown', (e) => {
+    if (e.code !== 'KeyF' || e.repeat) return
+    if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.()
+  })
+  const wasm = await init()
+  window.__memBytes = () => wasm.memory.buffer.byteLength
+  window.__ready = true
+</script>
