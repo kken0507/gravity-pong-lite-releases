@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72">
+<style>:root{--bg:#E9F5E4;--green:#1D9A3F;--gold:#F0A500;--pink:#D93A64}@media (prefers-color-scheme:dark){:root{--bg:#07110A;--green:#79FF79;--gold:#FFE57A;--pink:#FF7896}}</style>
+<rect x="18" y="18" width="72" height="72" rx="16" fill="var(--bg)"/>
+<rect x="27" y="36" width="7" height="36" rx="3.5" fill="var(--green)"/>
+<circle cx="64" cy="64" r="15.25" fill="none" stroke="var(--pink)" stroke-width="3.5"/>
+<circle cx="64" cy="64" r="5.5" fill="var(--pink)"/>
+<circle cx="40.01" cy="45.98" r="1.75" fill="var(--green)"/>
+<circle cx="44.44" cy="40.2" r="1.75" fill="var(--green)"/>
+<circle cx="50.26" cy="35.88" r="1.75" fill="var(--green)"/>
+<circle cx="57.33" cy="34.37" r="1.75" fill="var(--green)"/>
+<circle cx="72" cy="36" r="7.5" fill="var(--gold)"/>
+</svg>
